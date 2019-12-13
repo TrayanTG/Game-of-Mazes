@@ -3,6 +3,7 @@
 
 class Magician : public Player
 {
+	queue<pair<size_t, size_t> > moves;
 	bool dfs(Map &m, size_t x = 0, size_t y = 0);
 public:
 	Magician(const Map &m);

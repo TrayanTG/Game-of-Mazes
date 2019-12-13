@@ -120,6 +120,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="olcConsoleGameEngine.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Wizzard.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

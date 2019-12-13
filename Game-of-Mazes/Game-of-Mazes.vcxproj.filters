@@ -30,6 +30,9 @@
     <ClInclude Include="GameOfMazes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Wizzard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

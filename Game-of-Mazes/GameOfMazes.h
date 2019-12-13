@@ -1,12 +1,14 @@
 #pragma once
 #include "Map.h"
 #include "Magician.h"
+#include "Wizzard.h"
 
 class GameOfMazes : public olcConsoleGameEngine
 {
 	Map maps[1024];
 	size_t mapCnt;
 	Player *player;
+	Player *player2; // only for tests
 	float toSecond;
 	void loadMaps(Map *maps, size_t &mapCnt);
 	void sortMaps(Map *maps, size_t &mapCnt);
@@ -24,6 +26,7 @@ bool GameOfMazes::OnUserCreate()
 	toSecond = 1.0f;
 	loadMaps(maps, mapCnt);
 	player = new Magician(maps[mapCnt - 1]);
+	player2 = new Wizzard(maps[mapCnt - 1]);
 	return true;
 }
 
@@ -36,8 +39,14 @@ bool GameOfMazes::OnUserUpdate(float fElapsedTime)
 		if (player->getCntMoves())
 		{
 			pair<size_t, size_t> playerMove = player->move();
-			Draw(player->getX(), player->getY(), L'P');
+			Draw(player->getY(), player->getX(), L'M');
 		}
+		if (player2->getCntMoves())
+		{
+			pair<size_t, size_t> playerMove = player2->move();
+			Draw(player2->getY(), player2->getX(), L'W');
+		}
+
 		toSecond += 1.0f;
 	}
 	return true;
@@ -46,6 +55,7 @@ bool GameOfMazes::OnUserUpdate(float fElapsedTime)
 bool GameOfMazes::OnUserDestroy()
 {
 	delete player;
+	delete player2;
 	return true;
 }
 

@@ -4,7 +4,6 @@
 class Player
 {
 protected:
-	queue<pair<size_t, size_t> > moves;
 	size_t x, y;
 public:
 	Player() : x(0), y(0) {}

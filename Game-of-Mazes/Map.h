@@ -1,10 +1,15 @@
 #pragma once
+
+#define NOMINMAX
+
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include <exception>
 #include <queue>
 #include <utility>
+#include <stack>
+#include <limits>
 #include "olcConsoleGameEngine.h"
 using namespace std;
 
@@ -119,7 +124,8 @@ void Map::print(olcConsoleGameEngine *cge)const
 	cge->Fill(0, 0, cge->ScreenWidth(), cge->ScreenHeight(), L' ', 0);
 	for (size_t i = 0; i < map.size();i++)
 		for (size_t j = 0; j < map[i].size();j++)
-			cge->Draw(i, j, map[i][j]);
+			cge->Draw(j, i, map[i][j]);
+
 }
 
 bool Map::operator<(const Map &other)const
