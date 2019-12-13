@@ -1,18 +1,22 @@
 #include <iostream>
 #include <string>
-#include "Map.h"
+#include "GameOfMazes.h"
 using namespace std;
-
-Map maps[1024];
-size_t mapCnt = 0;
 
 int main()
 {
-	loadMaps(maps, mapCnt);
-	for (size_t i = 0;i < mapCnt;i++)
+	GameOfMazes game;
+	game.ConstructConsole(80, 40, 16, 16);
+	game.Start();
+	/*maps[mapCnt - 1].print();
+	Player *player = new Magician(maps[mapCnt - 1]);
+	while (player->getCntMoves())
 	{
-		maps[i].print();
+		maps[mapCnt - 1].print();
+		auto m = player->move();
+		maps[mapCnt - 1][m.first][m.second] = 'P';
+		system("pause");
 	}
-	system("pause");
+	system("pause");*/
 	return 0;
 }

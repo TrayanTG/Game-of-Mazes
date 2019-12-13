@@ -302,6 +302,13 @@ public:
 		m_hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 		m_hConsoleIn = GetStdHandle(STD_INPUT_HANDLE);
 
+		// Remove blinking underscore on console / cmd prompt
+		CONSOLE_CURSOR_INFO cursorInfo;
+		GetConsoleCursorInfo(m_hConsole, &cursorInfo);
+		cursorInfo.bVisible = false;
+		SetConsoleCursorInfo(m_hConsole, &cursorInfo);
+		// done
+
 		std::memset(m_keyNewState, 0, 256 * sizeof(short));
 		std::memset(m_keyOldState, 0, 256 * sizeof(short));
 		std::memset(m_keys, 0, 256 * sizeof(sKeyState));
@@ -310,7 +317,7 @@ public:
 
 		m_bEnableSound = false;
 
-		m_sAppName = L"Default";
+		m_sAppName = L"Game of Mazes";
 	}
 
 	void EnableSound()
@@ -934,7 +941,7 @@ private:
 
 				// Update Title & Present Screen Buffer
 				wchar_t s[256];
-				swprintf_s(s, 256, L"OneLoneCoder.com - Console Game Engine - %s - FPS: %3.2f", m_sAppName.c_str(), 1.0f / fElapsedTime);
+				swprintf_s(s, 256, L"%s - FPS: %3.2f", m_sAppName.c_str(), 1.0f / fElapsedTime);
 				SetConsoleTitle(s);
 				WriteConsoleOutput(m_hConsole, m_bufScreen, { (short)m_nScreenWidth, (short)m_nScreenHeight }, { 0,0 }, &m_rectWindow);
 			}

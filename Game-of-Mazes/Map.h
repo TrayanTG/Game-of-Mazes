@@ -5,14 +5,10 @@
 #include <exception>
 #include <queue>
 #include <utility>
+#include "olcConsoleGameEngine.h"
 using namespace std;
 
 const string DIR_MAPS = "maps";
-
-class Map;
-
-void loadMaps(Map *maps, size_t &mapCnt);
-void sortMaps(Map *maps, size_t &mapCnt);
 
 class Map
 {
@@ -23,9 +19,14 @@ public:
 	Map(ifstream &iFile);
 	
 	bool isValid();
-	void print()const;
+	void print(olcConsoleGameEngine *cge) const;
 
-	bool operator<(const Map &other)const;
+	size_t getHeight() const { return map.size(); }
+	size_t getWidth() const { return map[0].size(); }
+
+	bool operator<(const Map &other) const;
+	vector<char>& operator[](size_t pos);
+	const vector<char>& operator[](size_t pos) const;
 };
 
 Map::Map(ifstream &iFile)
@@ -113,17 +114,12 @@ bool Map::isValid()
 	return false;
 }
 
-void Map::print()const
+void Map::print(olcConsoleGameEngine *cge)const
 {
+	cge->Fill(0, 0, cge->ScreenWidth(), cge->ScreenHeight(), L' ', 0);
 	for (size_t i = 0; i < map.size();i++)
-	{
 		for (size_t j = 0; j < map[i].size();j++)
-		{
-			cout << map[i][j];
-		}
-		cout << endl;
-	}
-	cout << endl;
+			cge->Draw(i, j, map[i][j]);
 }
 
 bool Map::operator<(const Map &other)const
@@ -135,32 +131,12 @@ bool Map::operator<(const Map &other)const
 	return false;
 }
 
-// --------------------------------------------------------
-
-void loadMaps(Map *maps, size_t &mapCnt)
+vector<char>& Map::operator[](size_t pos)
 {
-	ifstream iFile(DIR_MAPS);
-	if (!iFile)
-	{
-		cerr << "File couldn't be opened!\n";
-		system("pause");
-		return;
-	}
-	try {
-		while (true)
-		{
-			Map t(iFile);
-			if (t.isValid()) maps[mapCnt++] = move(t);
-		}
-	}
-	catch (const exception &e)
-	{
-		//cout << e.what() << endl;
-	}
-	sortMaps(maps, mapCnt);
+	return map[pos];
 }
 
-void sortMaps(Map *maps, size_t &mapCnt)
+const vector<char>& Map::operator[](size_t pos) const
 {
-	sort(maps, maps + mapCnt);
+	return map[pos];
 }
