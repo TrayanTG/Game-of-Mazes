@@ -19,12 +19,17 @@ class Map
 {
 	vector<vector<char> > map;
 	size_t monsters;
+	size_t freeCells;
 public:
+	size_t F;
+
 	Map() {}
 	Map(ifstream &iFile);
 	
 	bool isValid();
 	void print(olcConsoleGameEngine *cge) const;
+
+	void reset();
 
 	size_t getHeight() const { return map.size(); }
 	size_t getWidth() const { return map[0].size(); }
@@ -34,7 +39,7 @@ public:
 	const vector<char>& operator[](size_t pos) const;
 };
 
-Map::Map(ifstream &iFile)
+Map::Map(ifstream &iFile): freeCells(0)
 {
 	size_t m, n;
 	iFile >> m >> n;
@@ -47,9 +52,11 @@ Map::Map(ifstream &iFile)
 			for (size_t j = 0;j < n;j++)
 			{
 				iFile >> map[i][j];
+				if (map[i][j] == '.') freeCells++;
 			}
 		}
 		iFile >> monsters;
+		F = freeCells - monsters - 2;
 	}
 	else
 	{
@@ -125,7 +132,15 @@ void Map::print(olcConsoleGameEngine *cge)const
 	for (size_t i = 0; i < map.size();i++)
 		for (size_t j = 0; j < map[i].size();j++)
 			cge->Draw(j, i, map[i][j]);
+}
 
+void Map::reset()
+{
+	for (size_t i = 0; i < map.size();i++)
+		for (size_t j = 0; j < map[i].size();j++)
+			if (map[i][j] != '#')
+				map[i][j] = '.';
+	F = freeCells - monsters - 2;
 }
 
 bool Map::operator<(const Map &other)const

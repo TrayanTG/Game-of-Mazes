@@ -14,7 +14,7 @@ public:
 Magician::Magician(const Map &m)
 {
 	Map t(m);
-	dfs(t);
+	if(!dfs(t)) throw runtime_error("No path aviable!");
 	//moves.pop(); // removing the initial value (0, 0)
 }
 
@@ -23,27 +23,10 @@ bool Magician::dfs(Map &m, size_t x, size_t y)
 	moves.emplace(x, y);
 	if (x + 1 == m.getHeight() && y + 1 == m.getWidth()) return true;
 	m[x][y] = 'T';
-	if (x > 0 && m[x - 1][y] == '.' && dfs(m, x - 1, y))
-	{
-		m[x][y] = '.';
-		return true;
-	}
-	if (y > 0 && m[x][y - 1] == '.' && dfs(m, x, y - 1))
-	{
-		m[x][y] = '.';
-		return true;
-	}
-	if (x < m.getHeight() - 1 && m[x + 1][y] == '.' && dfs(m, x + 1, y))
-	{
-		m[x][y] = '.';
-		return true;
-	}
-	if (y < m.getWidth() - 1 && m[x][y + 1] == '.' && dfs(m, x, y + 1))
-	{
-		m[x][y] = '.';
-		return true;
-	}
-	m[x][y] = '.';
+	if (x > 0 && m[x - 1][y] == '.' && dfs(m, x - 1, y)) return true;
+	if (y > 0 && m[x][y - 1] == '.' && dfs(m, x, y - 1)) return true;
+	if (x < m.getHeight() - 1 && m[x + 1][y] == '.' && dfs(m, x + 1, y)) return true;
+	if (y < m.getWidth() - 1 && m[x][y + 1] == '.' && dfs(m, x, y + 1)) return true;
 	return false;
 }
 

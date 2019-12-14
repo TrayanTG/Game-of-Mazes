@@ -118,6 +118,7 @@
     <ClInclude Include="GameOfMazes.h" />
     <ClInclude Include="Magician.h" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Message.h" />
     <ClInclude Include="olcConsoleGameEngine.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Wizzard.h" />
