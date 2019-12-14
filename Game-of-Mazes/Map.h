@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define NOMINMAX
 
@@ -10,6 +10,9 @@
 #include <utility>
 #include <stack>
 #include <limits>
+#include <algorithm>
+#include <random>
+
 #include "olcConsoleGameEngine.h"
 using namespace std;
 
@@ -18,8 +21,8 @@ const string DIR_MAPS = "maps";
 class Map
 {
 	vector<vector<char> > map;
+	vector<pair<size_t, size_t> > freeCells;
 	size_t monsters;
-	size_t freeCells;
 public:
 	size_t F;
 
@@ -30,16 +33,19 @@ public:
 	void print(olcConsoleGameEngine *cge) const;
 
 	void reset();
+	void shuffle();
 
 	size_t getHeight() const { return map.size(); }
 	size_t getWidth() const { return map[0].size(); }
+	size_t getMonstersCnt() const { return monsters; }
+	pair<size_t, size_t> getNthFreeCell(size_t n) const { return freeCells[n]; }
 
 	bool operator<(const Map &other) const;
 	vector<char>& operator[](size_t pos);
 	const vector<char>& operator[](size_t pos) const;
 };
 
-Map::Map(ifstream &iFile): freeCells(0)
+Map::Map(ifstream &iFile)
 {
 	size_t m, n;
 	iFile >> m >> n;
@@ -52,11 +58,14 @@ Map::Map(ifstream &iFile): freeCells(0)
 			for (size_t j = 0;j < n;j++)
 			{
 				iFile >> map[i][j];
-				if (map[i][j] == '.') freeCells++;
+				if ((i || j) && (i!=getHeight() - 1 || j!=getWidth() - 1) && map[i][j] == '.')
+				{
+					freeCells.emplace_back(i, j);
+				}
 			}
 		}
 		iFile >> monsters;
-		F = freeCells - monsters - 2;
+		F = freeCells.size() - monsters;
 	}
 	else
 	{
@@ -131,7 +140,12 @@ void Map::print(olcConsoleGameEngine *cge)const
 	cge->Fill(0, 0, cge->ScreenWidth(), cge->ScreenHeight(), L' ', 0);
 	for (size_t i = 0; i < map.size();i++)
 		for (size_t j = 0; j < map[i].size();j++)
-			cge->Draw(j, i, map[i][j]);
+		{
+			if (map[i][j] == '.')cge->Draw(j, i, map[i][j], FG_YELLOW);
+			else if (map[i][j] == 'X')cge->Draw(j, i, map[i][j], FG_CYAN);
+			else if (map[i][j] == '#')cge->Draw(j, i, map[i][j], FG_DARK_CYAN);
+
+		}
 }
 
 void Map::reset()
@@ -140,7 +154,14 @@ void Map::reset()
 		for (size_t j = 0; j < map[i].size();j++)
 			if (map[i][j] != '#')
 				map[i][j] = '.';
-	F = freeCells - monsters - 2;
+	F = freeCells.size() - monsters;
+}
+
+void Map::shuffle()
+{
+	unsigned seed = chrono::system_clock::now().time_since_epoch().count();
+	default_random_engine e(seed);
+	std::shuffle(freeCells.begin(), freeCells.end(), e);
 }
 
 bool Map::operator<(const Map &other)const
