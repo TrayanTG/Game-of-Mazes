@@ -7,7 +7,8 @@
 
 class GameOfMazes : public olcConsoleGameEngine
 {
-	vector<Map> maps;
+	Map maps[1024];
+	size_t mapsCnt;
 	size_t level;
 	Player *player;
 	pair<size_t, size_t> cursor; // cursor for putting walls
@@ -17,8 +18,8 @@ class GameOfMazes : public olcConsoleGameEngine
 	list<Message> messages;
 	vector<Monster> monsters;
 
-	void loadMaps(vector<Map> &maps);
-	void sortMaps(vector<Map> &maps);
+	void loadMaps();
+	void sortMaps();
 
 	void initMonsters(size_t level);
 	void updateMonsters();
@@ -39,11 +40,12 @@ public:
 
 bool GameOfMazes::OnUserCreate()
 {
-	loadMaps(maps);
+	loadMaps();
 	level = 0;
 	cursor = { 0,0 };
 	state = "mapManagement";
 	toWait = 0.0f;
+
 	return true;
 }
 
@@ -53,7 +55,7 @@ bool GameOfMazes::OnUserUpdate(float fElapsedTime)
 	else if (state == "cycle") cycle();
 	else if (state == "play") return play(fElapsedTime);
 	else if (state == "mapManagement") mapManagement();
-	printMessages(maps[level].getHeight()+1, 0, fElapsedTime);
+	printMessages(maps[level].getHeight() + 1, 0, fElapsedTime);
 	return true;
 }
 
@@ -63,8 +65,9 @@ bool GameOfMazes::OnUserDestroy()
 	return true;
 }
 
-void GameOfMazes::loadMaps(vector<Map> &maps)
+void GameOfMazes::loadMaps()
 {
+	mapsCnt = 0;
 	ifstream iFile(DIR_MAPS);
 	if (!iFile)
 	{
@@ -72,23 +75,24 @@ void GameOfMazes::loadMaps(vector<Map> &maps)
 		system("pause");
 		return;
 	}
+	// read utill eof (Map(ifstream&) throws exception when eof reached)
 	try {
 		while (true)
 		{
 			Map t(iFile);
-			if (t.isValid()) maps.push_back(move(t));
+			if (t.isValid()) maps[mapsCnt++] = move(t);
 		}
 	}
 	catch (...)//(const exception &e)
 	{
 		//cout << e.what() << endl;
 	}
-	sortMaps(maps);
+	sortMaps();
 }
 
-void GameOfMazes::sortMaps(vector<Map> &maps)
+void GameOfMazes::sortMaps()
 {
-	sort(maps.begin(), maps.end());
+	sort(maps, maps+mapsCnt);
 }
 
 void GameOfMazes::initMonsters(size_t level)
@@ -180,7 +184,7 @@ bool GameOfMazes::play(float fElapsedTime)
 			delete player;
 			level++;
 
-			if (level >= maps.size())
+			if (level >= mapsCnt)
 			{
 				DrawString(0, maps[level - 1].getHeight() + 1, L"You win!");
 				commandCycle = "exit";
