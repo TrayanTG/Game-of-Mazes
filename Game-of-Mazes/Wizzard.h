@@ -37,6 +37,9 @@ bool Wizzard::bfs(const Map &m, size_t x, size_t y)
 	q.emplace(x, y);
 	parent[0][0] = { 0,0 }; // (0, 0) comes from itself
 
+	/// easter egg:
+	/// If you find this, you are cool, otherwise the behaviour is undefined!
+
 	while (!q.empty())
 	{
 		x = q.front().first;
