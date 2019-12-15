@@ -21,28 +21,28 @@ const string DIR_MAPS = "maps";
 class Map
 {
 	vector<vector<char> > map;
-	vector<pair<size_t, size_t> > freeCells;
-	size_t monsters;
+	vector<pair<size_t, size_t> > freeCells; //a vector, containing all cells of type '.'
+	size_t monsters; //count of monsters
 public:
-	size_t F;
+	size_t F; // F = freeCells.size() - monsters - 2
 
 	Map() {}
-	Map(ifstream &iFile);
+	Map(ifstream &iFile); //loads a map from a file and if failed to import, throws an exception
 	
-	bool isValid();
-	void print(olcConsoleGameEngine *cge) const;
+	bool isValid(); //checks if the map is valid (contains only '.' and '#' and a path from (0, 0) to (m-1, n-1))
+	void print(olcConsoleGameEngine *cge) const; //prints the map to the console ptr the modified (with 'X'-es)
 
-	void reset();
-	void shuffle();
+	void reset(); //undo all 'X' to '.'
+	void shuffle(); //shuffle freeCells to later place monsters freeCells[0], [1], [2], ...
 
 	size_t getHeight() const { return map.size(); }
 	size_t getWidth() const { return map[0].size(); }
 	size_t getMonstersCnt() const { return monsters; }
 	pair<size_t, size_t> getNthFreeCell(size_t n) const { return freeCells[n]; }
 
-	bool operator<(const Map &other) const;
-	vector<char>& operator[](size_t pos);
-	const vector<char>& operator[](size_t pos) const;
+	bool operator<(const Map &other) const; //predefined operator<. Returns true if *this is lower level than other
+	vector<char>& operator[](size_t pos); //predefined operator[] for non-const
+	const vector<char>& operator[](size_t pos) const; //predefined operator[] for const
 };
 
 Map::Map(ifstream &iFile)

@@ -7,34 +7,35 @@
 
 class GameOfMazes : public olcConsoleGameEngine
 {
-	Map maps[1024];
-	size_t mapsCnt;
-	size_t level;
-	Player *player;
-	pair<size_t, size_t> cursor; // cursor for putting walls
-	string state;
-	string commandCycle; // command for after the infinite cycle
-	float toWait;
-	list<Message> messages;
-	vector<Monster> monsters;
+	Map maps[1024]; //holds the data of all maps
+	size_t mapsCnt; //holds the count of the maps
+	size_t level; //the current level of the player
+	Player *player; //ptr to the player class (Magician or Wizard)
+	pair<size_t, size_t> cursor; //cursor for putting walls
+	string state; //what the main game thread loop should do
+	string commandCycle; //command for after the infinite cycle
+	float toWait; //variable, used to track time
+	list<Message> messages; //interactive list of messages
+	vector<Monster> monsters; //data for all the monsters of the current map
 
-	void loadMaps();
-	void sortMaps();
+	void loadMaps(); //loads maps from a file DIR_MAPS
+	void sortMaps(); //sorts them by level
 
-	void initMonsters(size_t level);
-	void updateMonsters();
-	void printMonsters();
-	bool checkLose() const;
+	void initMonsters(size_t level); //sets initial random positions of the monsters
+	void updateMonsters(); //all monsters move if possible
+	void printMonsters(); //prints all monsters to the console
+	bool checkLose() const; //returns true if the player and monster overlap
 
-	void cycle();
-	bool play(float fElapsedTime);
-	void mapManagement();
-	void printMessages(size_t x, size_t y, float fElapsedTime);
+	void cycle(); //"pauses" the main game loop untill a button is pressed
+	bool play(float fElapsedTime); //the process of "walking" through the maze
+	void mapManagement(); //the process of putting walls
+	void printMessages(size_t x, size_t y, float fElapsedTime); //prints the messages and if needed, deletes them
+
 
 public:
 	GameOfMazes() {}
-	virtual bool OnUserCreate() override;
-	virtual bool OnUserUpdate(float fElapsedTime) override;
+	virtual bool OnUserCreate() override; //initializes the class
+	virtual bool OnUserUpdate(float fElapsedTime) override; //main game thread loop
 	virtual bool OnUserDestroy() override;
 };
 
@@ -195,6 +196,7 @@ bool GameOfMazes::play(float fElapsedTime)
 		}
 		toWait += 1.0f;
 	}
+	return true;
 }
 
 void GameOfMazes::mapManagement()

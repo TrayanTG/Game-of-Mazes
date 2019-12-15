@@ -3,11 +3,12 @@
 
 class Monster
 {
-	size_t x, y;
+	size_t x;
+	size_t y;
 	string direction;
 public:
 	Monster(size_t x, size_t y);
-	pair<size_t, size_t> move(const Map &map, const vector<Monster> &m);
+	pair<size_t, size_t> move(const Map &map, const vector<Monster> &m); //returns the next move of the monster + repositioning
 
 	size_t getX() const { return x; }
 	size_t getY() const { return y; }

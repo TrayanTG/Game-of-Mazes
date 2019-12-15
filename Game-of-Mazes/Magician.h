@@ -3,11 +3,11 @@
 
 class Magician : public Player
 {
-	queue<pair<size_t, size_t> > moves;
-	bool dfs(Map &m, size_t x = 0, size_t y = 0);
+	queue<pair<size_t, size_t> > moves; //holds the path of the player
+	bool dfs(Map &m, size_t x = 0, size_t y = 0); //initializes moves and returns true if path found
 public:
-	Magician(const Map &m);
-	virtual pair<size_t, size_t> move() override;
+	Magician(const Map &m); //initializes and throws an exception if path not found
+	virtual pair<size_t, size_t> move() override; //returns the next move of the player + repositioning
 	virtual size_t getCntMoves()const override { return moves.size(); }
 };
 
