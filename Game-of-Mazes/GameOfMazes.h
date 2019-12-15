@@ -284,8 +284,8 @@ void GameOfMazes::printMessages(size_t x, size_t y, float fElapsedTime)
 {
 	for (auto it = messages.begin(); it != messages.end(); ++it)
 	{
-		it->durotation -= fElapsedTime;
-		if (it->durotation <= 0.0f)
+		it->duration -= fElapsedTime;
+		if (it->duration <= 0.0f)
 		{
 			//Fill(it->y, it->x, it->y + it->text.size(), it->x, L' ');
 			it = messages.erase(it);
